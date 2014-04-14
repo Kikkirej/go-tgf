@@ -31,6 +31,8 @@ func main() {
 }
 ```
 
-### Dependency
+### Dependencies:
 
 * [code.google.com/p/go-uuid/uuid](code.google.com/p/go-uuid/uuid)
+
+* [gopkg.in/check.v1](gopkg.in/check.v1) (For `go test`)

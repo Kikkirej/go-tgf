@@ -92,8 +92,8 @@ func (n *Node) InboundEdges() []Edge {
 type Edge struct {
   Id              string
   Label           string
-  OutboundNodeId  string
-  OutboundNode    Node
   InboundNodeId   string
   InboundNode     Node
+  OutboundNodeId  string
+  OutboundNode    Node
 }
