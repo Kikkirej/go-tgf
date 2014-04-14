@@ -1,4 +1,11 @@
-1 First node
-2 Second node
+1 First Layer: A
+2 Second Layer: C
+3 First Layer: B
+4 Second Layer: D
+5 Second Layer: E
+6 Third Layer: F
 #
-1 2 Edge between the two
+1 2 A->C
+1 5 A->E
+3 4 B->D
+4 6 D->F
