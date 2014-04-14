@@ -1,7 +1,6 @@
 package ast
 
 import (
-  "fmt"
   "code.google.com/p/go-uuid/uuid"
 )
 
@@ -10,22 +9,22 @@ var (
   Edges = make(map[string]Edge)
 )
 
-func NewNode(id string, label string) Node {
+func MakeNode(id string, label string) Node {
   node := Node{id, label, make([]string, 0), make([]string, 0)}
   Nodes[id] = node
   return node
 }
 
 //
-// OutboundNode ---- [label] ----> InboundNode
+// InboundNode ---- [label] ----> OutboundNode
 //
-func NewEdge(label string, OutboundNodeId string, InboundNodeId string) Edge {
+func MakeEdge(label string, InboundNodeId string, OutboundNodeId string) Edge {
   id           := uuid.New()
-  OutboundNode := Nodes[OutboundNodeId]
   InboundNode  := Nodes[InboundNodeId]
+  OutboundNode := Nodes[OutboundNodeId]
 
-  OutboundNode.AppendInboundEdgeId(id)
   InboundNode.AppendOutboundEdgeId(id)
+  OutboundNode.AppendInboundEdgeId(id)
 
   edge := Edge{id, label, InboundNodeId, InboundNode, OutboundNodeId, OutboundNode}
   Edges[id] = edge
@@ -44,18 +43,18 @@ type Node struct {
   OutboundEdgeIds []string
 }
 
-func (n Node) AppendOutboundEdgeId(id string) {
+func (n *Node) AppendOutboundEdgeId(id string) {
   n.OutboundEdgeIds = append(n.OutboundEdgeIds, id)
-  Nodes[n.Id] = n
+  Nodes[n.Id] = *n
 }
 
-func (n Node) AppendInboundEdgeId(id string) {
+func (n *Node) AppendInboundEdgeId(id string) {
   n.InboundEdgeIds = append(n.InboundEdgeIds, id)
-  Nodes[n.Id] = n
+  Nodes[n.Id] = *n
 }
 
-func (n Node) OutboundEdges() []Edge {
-  OutboundEdges := make([]Edge, len(n.OutboundEdgeIds))
+func (n *Node) OutboundEdges() []Edge {
+  OutboundEdges := make([]Edge, 0)
 
   for _, edgeId := range n.OutboundEdgeIds {
     OutboundEdges = append(OutboundEdges, Edges[edgeId])
@@ -64,8 +63,8 @@ func (n Node) OutboundEdges() []Edge {
   return OutboundEdges
 }
 
-func (n Node) InboundEdges() []Edge {
-  InboundEdges := make([]Edge, len(n.InboundEdgeIds))
+func (n *Node) InboundEdges() []Edge {
+  InboundEdges := make([]Edge, 0)
 
   for _, edgeId := range n.InboundEdgeIds {
     InboundEdges = append(InboundEdges, Edges[edgeId])
