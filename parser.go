@@ -29,11 +29,11 @@ func Parse(file io.Reader) (map[string]ast.Node, map[string]ast.Edge, error) {
         ast.NewNode(id, label)
 
       } else if scannerState == 1 {
-        fromNodeId := words[0]
-        toNodeId   := words[1]
-        label      := strings.Join(words[descriptionStartsAt:], " ")
+        OutboundNodeId := words[0]
+        InboundNodeId  := words[1]
+        label          := strings.Join(words[descriptionStartsAt:], " ")
 
-        ast.NewEdge(label, fromNodeId, toNodeId)
+        ast.NewEdge(label, OutboundNodeId, InboundNodeId)
       }
     }
   }

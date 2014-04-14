@@ -1,6 +1,7 @@
 package ast
 
 import (
+  "fmt"
   "code.google.com/p/go-uuid/uuid"
 )
 
@@ -15,15 +16,18 @@ func NewNode(id string, label string) Node {
   return node
 }
 
-func NewEdge(label string, fromNodeId string, toNodeId string) Edge {
-  id       := uuid.New()
-  fromNode := Nodes[fromNodeId]
-  toNode   := Nodes[toNodeId]
+//
+// OutboundNode ---- [label] ----> InboundNode
+//
+func NewEdge(label string, OutboundNodeId string, InboundNodeId string) Edge {
+  id           := uuid.New()
+  OutboundNode := Nodes[OutboundNodeId]
+  InboundNode  := Nodes[InboundNodeId]
 
-  fromNode.AppendToEdgeId(id)
-  fromNode.AppendFromEdgeId(id)
+  OutboundNode.AppendInboundEdgeId(id)
+  InboundNode.AppendOutboundEdgeId(id)
 
-  edge := Edge{id, label, fromNodeId, fromNode, toNodeId, toNode}
+  edge := Edge{id, label, InboundNodeId, InboundNode, OutboundNodeId, OutboundNode}
   Edges[id] = edge
 
   return edge
@@ -34,30 +38,40 @@ func NewEdge(label string, fromNodeId string, toNodeId string) Edge {
 // Node
 //
 type Node struct {
-  Id          string
-  Label       string
-  FromEdgeIds []string
-  ToEdgeIds   []string
+  Id              string
+  Label           string
+  InboundEdgeIds  []string
+  OutboundEdgeIds []string
 }
 
-func (n Node) AppendToEdgeId(id string) {
-  n.ToEdgeIds = append(n.ToEdgeIds, id)
+func (n Node) AppendOutboundEdgeId(id string) {
+  n.OutboundEdgeIds = append(n.OutboundEdgeIds, id)
   Nodes[n.Id] = n
 }
 
-func (n Node) AppendFromEdgeId(id string) {
-  n.FromEdgeIds = append(n.FromEdgeIds, id)
+func (n Node) AppendInboundEdgeId(id string) {
+  n.InboundEdgeIds = append(n.InboundEdgeIds, id)
   Nodes[n.Id] = n
 }
 
-func (n Node) ToEdges() []Edge {
-  toEdges := make([]Edge, 0)
+func (n Node) OutboundEdges() []Edge {
+  OutboundEdges := make([]Edge, len(n.OutboundEdgeIds))
 
-  // for _, edgeId := range n.ToEdgeIds {
-  //   toEdges = append(toEdges, Nodes[edgeId])
-  // }
+  for _, edgeId := range n.OutboundEdgeIds {
+    OutboundEdges = append(OutboundEdges, Edges[edgeId])
+  }
 
-  return toEdges
+  return OutboundEdges
+}
+
+func (n Node) InboundEdges() []Edge {
+  InboundEdges := make([]Edge, len(n.InboundEdgeIds))
+
+  for _, edgeId := range n.InboundEdgeIds {
+    InboundEdges = append(InboundEdges, Edges[edgeId])
+  }
+
+  return InboundEdges
 }
 
 
@@ -65,10 +79,10 @@ func (n Node) ToEdges() []Edge {
 // Edge
 //
 type Edge struct {
-  Id          string
-  Label       string
-  FromNodeId  string
-  FromNode    Node
-  ToNodeId    string
-  ToNode      Node
+  Id              string
+  Label           string
+  OutboundNodeId  string
+  OutboundNode    Node
+  InboundNodeId   string
+  InboundNode     Node
 }
