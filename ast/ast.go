@@ -32,6 +32,18 @@ func MakeEdge(label string, InboundNodeId string, OutboundNodeId string) Edge {
   return edge
 }
 
+func RootNodes() []Node {
+  rootNodes := make([]Node, 0)
+
+  for _, node := range Nodes {
+    if len(node.InboundEdgeIds) == 0 {
+      rootNodes = append(rootNodes, node)
+    }
+  }
+
+  return rootNodes
+}
+
 
 // ----------------------------
 // Node
