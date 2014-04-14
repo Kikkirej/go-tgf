@@ -9,32 +9,28 @@ package main
 import (
   "fmt"
   "github.com/didip/gotgf"
-  "github.com/didip/gotgf/ast"
 )
 
 func main() {
-  nodes, _, err := tgf.ParseFile("example.tgf")
+  allNodes, rootNodes, _, err := tgf.ParseFile("example.tgf")
   if err != nil { panic(err) }
 
-  // Print array of root nodes
-  fmt.Println("Root Nodes: ", ast.RootNodes(), "\n")
+  fmt.Println("Root Nodes: ", rootNodes, "\n")
 
-  for index, node := range nodes {
-    // Print node.Id
+  for index, node := range allNodes {
     fmt.Println("Node ID:", node.Id)
-
-    // Print node.Label
     fmt.Println("Node Label:", node.Label)
 
-    // Print array of edges that go out from a particular node.
     if index == "1" || index == "3" || index == "4" {
       fmt.Println("Node OutboundEdges", node.OutboundEdges(), "\n")
     }
-
-    // Print array of edges that come into a particular node.
     if index == "2" || index == "4" || index == "5" {
       fmt.Println("Node InboundEdges:", node.InboundEdges(), "\n")
     }
   }
 }
 ```
+
+### Dependency
+
+* [code.google.com/p/go-uuid/uuid](code.google.com/p/go-uuid/uuid)

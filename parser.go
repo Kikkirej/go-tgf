@@ -8,7 +8,7 @@ import (
     "github.com/didip/gotgf/ast"
 )
 
-func Parse(file io.Reader) (map[string]ast.Node, map[string]ast.Edge, error) {
+func Parse(file io.Reader) (map[string]ast.Node, []ast.Node, map[string]ast.Edge, error) {
   scannerState := 0
   scanner      := bufio.NewScanner(file)
 
@@ -38,13 +38,13 @@ func Parse(file io.Reader) (map[string]ast.Node, map[string]ast.Edge, error) {
     }
   }
 
-  return ast.Nodes, ast.Edges, nil
+  return ast.Nodes, ast.RootNodes(), ast.Edges, nil
 }
 
-func ParseFile(filename string) (map[string]ast.Node, map[string]ast.Edge, error) {
+func ParseFile(filename string) (map[string]ast.Node, []ast.Node, map[string]ast.Edge, error) {
   file, err := os.Open(filename)
   if err != nil {
-    return make(map[string]ast.Node), make(map[string]ast.Edge), err
+    return make(map[string]ast.Node), make([]ast.Node, 0), make(map[string]ast.Edge), err
   }
   defer file.Close()
 
