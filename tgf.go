@@ -5,7 +5,7 @@ import (
     "io"
     "bufio"
     "strings"
-    "github.com/kikkirej/gotgf/ast"
+    "github.com/kikkirej/go-tgf/ast"
 )
 
 func Parse(file io.Reader) (map[string]ast.Node, []ast.Node, map[string]ast.Edge, error) {
